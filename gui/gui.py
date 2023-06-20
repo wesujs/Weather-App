@@ -1,9 +1,15 @@
 import tkinter
 import customtkinter
-    
+import sys
+import os
+import getpass
+path = 'C:/Users/Willi/Desktop/Pythons/Weather App/functions'
+sys.path.append(path)
+
+from weather_controls import *
+from get_location import *
 
 # System Settings
-
 customtkinter.set_appearance_mode("System")
 customtkinter.set_default_color_theme("blue")
 
@@ -15,13 +21,16 @@ app.title("Weather App")
 
 
 # Adding UI Elements
+username = getpass.getuser()
+title = customtkinter.CTkLabel(app, text=f"Welcome Back, {username}!")
+title.pack(padx=50, pady=50)
 
-title = customtkinter.CTkLabel(app, text="Insert Your City")
-title.pack(padx=10, pady=10)
+def button_event():
+    print("button pressed")
+button = customtkinter.CTkButton(app, text="CTkButton", command=button_event)
 
-# Load Button
-
-get_weather = customtkinter.CTkButton(app, text="Check Weather!", command=check_weather())
+# pack the button into the window
+button.pack()
 
 # Run App
 

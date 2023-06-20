@@ -2,13 +2,23 @@ import requests
 import json
 from datetime import datetime
 import time
-from dotenv import dotenv_values
+# from dotenv import dotenv_values
 import os
-from get_location import location_city, location_state
+from get_location import *
+
+# Temperature Conversion Functions
+
+def kelvin_to_celsius(kelvin):
+    celsius = kelvin - 273.15
+    return round(celsius)
+
+def kelvin_to_fahrenheit(kelvin):
+    fahrenheit = (kelvin - 273.15) * 9/5 + 32
+    return round(fahrenheit)
 
 
 # Load the environment variables
-dotenv_values('.env')
+# dotenv_values('.env')
 
 print(time.tzname[0])
 # API Setup / Variables Required
@@ -16,12 +26,10 @@ def weather_checker():
     """ Contacts Open Weather Map API and Pulls Current Data Requested """
     
     # Enter your API key here
-    api_key = os.environ.get('WEATHER_API_KEY')
+    api_key = "b8a2b9e1073dd3f990bdc8717b6d8f9d"
 
     # base_url variable to store url
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
- 
-    # Give city name
     
  
     # complete_url variable to store
@@ -36,7 +44,6 @@ def weather_checker():
     # convert json format data into
     # python format data
     x = response.json()
-    
     # Now x contains list of nested dictionaries
     # Check the value of "cod" key is equal to
     # "404", means city is found otherwise,
@@ -67,18 +74,30 @@ def weather_checker():
         # to the "description" key at
         # the 0th index of z
         weather_description = z[0]["description"]
-    
-        # print following values
-        print(" Temperature (in kelvin unit) = " +
-                        str(current_temperature) +
+        
+        #Imperial Measurements
+        if get_measurement_system() == "imperial":
+            # print following values
+            current_temperature = kelvin_to_fahrenheit(current_temperature)
+            print(" Temperature  = " +
+                        str(current_temperature) + "°F" +
               "\n atmospheric pressure (in hPa unit) = " +
                         str(current_pressure) +
               "\n humidity (in percentage) = " +
                         str(current_humidity) +
               "\n description = " +
                         str(weather_description))
-    
-    else:
-        print(" City Not Found ")
-    
-weather_checker()
+            
+        # Metric Measurements
+        elif get_measurement_system() == "metric":
+            current_temperature = kelvin_to_celsius(current_temperature)
+            print(" Temperature  = " +
+                        str(current_temperature) + "°F" +
+              "\n atmospheric pressure (in hPa unit) = " +
+                        str(current_pressure) +
+              "\n humidity (in percentage) = " +
+                        str(current_humidity) + "%" +
+              "\n description = " +
+                        str(weather_description))
+        else:
+            print(" City Not Found ")
